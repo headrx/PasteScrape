@@ -23,13 +23,12 @@ latest_pastes = soup.find('table', class_="maintable")
 pastes = latest_pastes.findAll('a')
 #add each link to all_pastes as post_title:url
 for paste in pastes:
-    if paste.text != "https://pastebin.com/archive":
-        all_pastes[paste.text] = "https://pastebin.com/raw"+paste['href']
+    all_pastes[paste.text] = "https://pastebin.com/raw"+paste['href']
 print('[+] Complete')
 print('[+] Opening...')
 
 #Open all links in browser
 for paste in all_pastes:
-    print("URL Opened >> ", all_pastes[paste])
-    if all_pastes[paste] != "https://pastebin.com/archive":
+    if not all_pastes[paste].startswith('https://pastebin.com/raw/archive'):
+        print("[+] URL Opened >> ", all_pastes[paste])
         webbrowser.open(all_pastes[paste])
