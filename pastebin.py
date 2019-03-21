@@ -9,7 +9,7 @@ all_pastes = {}
 
 #Selenium driver setup
 chrome_options = Options()
-chrome_options.add_argument('--headless')
+#chrome_options.add_argument('--headless')
 driver = webdriver.Chrome(options=chrome_options)
 
 #Request the page
@@ -23,10 +23,13 @@ latest_pastes = soup.find('table', class_="maintable")
 pastes = latest_pastes.findAll('a')
 #add each link to all_pastes as post_title:url
 for paste in pastes:
-    all_pastes[paste.text] = "https://pastebin.com/raw"+paste['href']
+    if paste.text != "https://pastebin.com/archive":
+        all_pastes[paste.text] = "https://pastebin.com/raw"+paste['href']
 print('[+] Complete')
 print('[+] Opening...')
 
 #Open all links in browser
 for paste in all_pastes:
-    webbrowser.open(all_pastes[paste])
+    print("URL Opened >> ", all_pastes[paste])
+    if all_pastes[paste] != "https://pastebin.com/archive":
+        webbrowser.open(all_pastes[paste])
