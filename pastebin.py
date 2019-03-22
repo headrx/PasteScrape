@@ -1,25 +1,17 @@
-from selenium import webdriver
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import webbrowser
+import webbrowser, requests
 
 
 def retrieve_pastes():
         #WIll store all pastes from the /archive(recent)
         all_pastes = {}
-
-        #Selenium driver setup
-        chrome_options = Options()
-        #chrome_options.add_argument('--headless')
-        driver = webdriver.Chrome(options=chrome_options)
-
         #Request the page
-        driver.get('https://pastebin.com/archive')
+        s = requests.Session()
+        headers = {"user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"}
+        response = s.get('https://pastebin.com/archive', headers=headers)
         #Get the source and open in soup
-        page_source = driver.page_source
+        page_source = response.content
         soup = BeautifulSoup(page_source, 'lxml')
-        driver.quit()
         #Find our table and grab all links
         latest_pastes = soup.find('table', class_="maintable")
         pastes = latest_pastes.findAll('a')
