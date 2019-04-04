@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
-import webbrowser, requests
+import webbrowser
+import requests
+import sys
 
 
 def retrieve_pastes():
@@ -18,7 +20,8 @@ def retrieve_pastes():
         pastes = latest_pastes.findAll('a')
         #add each link to all_pastes as post_title:url
         for paste in pastes:
-                all_pastes[paste.text] = "https://pastebin.com"+paste['href']
+                if 'archive' not in paste['href']:
+                        all_pastes[paste.text] = "https://pastebin.com"+paste['href']
 
         print('[+] Complete')
         print('[+] Opening...')
@@ -47,12 +50,7 @@ def open_pastes(all_pastes):
                         #print("[+] URL Opened >> ", all_pastes[paste])
                         write_paste_log(all_pastes[paste])
                         webbrowser.open(all_pastes[paste])
-def clean_pastes(pastes):
-        for paste in pastes:
-                if 'archive' in paste:
-                        del pastes[paste]
-        return pastes
-
+                        
 def submit_pastes(pastes):
         """This will ask user to submit specific pastes they find worth submission"""
         x = 0
@@ -64,7 +62,10 @@ def submit_pastes(pastes):
                 titles.append(paste)
                 x +=1
         print('Enter numbers to submit seperated by commas, no spaces. For ex: 3,4,5,6')
+        print("q for exit")
         selections = input('>> ')
+        if selections.lower() == "q":
+                sys.exit()
         selections = selections.split(',')
         for num in selections:
                 url_split = urls[int(num)].split('/')
@@ -74,7 +75,5 @@ def submit_pastes(pastes):
                 requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
 
 pastes = retrieve_pastes()
-pastes = clean_pastes(pastes)
 open_pastes(pastes)
-
 submit_pastes(pastes)
