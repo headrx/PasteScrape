@@ -42,32 +42,40 @@ def open_pastes(all_pastes):
         """Open all the pastes in browser tabs """
         #Open all links in browser
         for paste in all_pastes:
-                if 'archive' not in all_pastes[paste]:
-                        if check_log(all_pastes[paste]) == True:
-                                #print("[+] URL Opened >> ", all_pastes[paste])
-                                write_paste_log(all_pastes[paste])
-                                webbrowser.open(all_pastes[paste])
+                if check_log(all_pastes[paste]) == True:
+                        pass
+                        #print("[+] URL Opened >> ", all_pastes[paste])
+                        write_paste_log(all_pastes[paste])
+                        webbrowser.open(all_pastes[paste])
+def clean_pastes(pastes):
+        for paste in pastes:
+                if 'archive' in paste:
+                        del pastes[paste]
+        return pastes
 
 def submit_pastes(pastes):
         """This will ask user to submit specific pastes they find worth submission"""
         x = 0
-        paste_menu_selections = {}
+        urls = list()
+        titles = list()
         for paste in pastes:
-                if 'archive' not in pastes[paste]:
-                        print("[{}] {} : {}".format(x,paste,pastes[paste]))
-                        paste_menu_selections[str(x)] = pastes[paste]
-                        x +=1
+                print("[{}] {} : {}".format(x,paste,pastes[paste]))
+                urls.append(pastes[paste])
+                titles.append(paste)
+                x +=1
         print('Enter numbers to submit seperated by commas, no spaces. For ex: 3,4,5,6')
         selections = input('>> ')
         selections = selections.split(',')
         for num in selections:
-                url_split = paste_menu_selections[num].split('/')
+                url_split = urls[int(num)].split('/')
                 url_num = url_split.pop()
-                print(url_num,paste)
-                requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,paste))
+                print(url_num)
+                title = titles[int(num)]
+                print(title)
+                requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
 
 pastes = retrieve_pastes()
-
+pastes = clean_pastes(pastes)
 open_pastes(pastes)
 
 submit_pastes(pastes)
