@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import webbrowser
 import requests
 import sys
-
+import subprocess
 
 def retrieve_pastes():
         """Scrape the newest public pastes """
@@ -50,7 +50,7 @@ def open_pastes(all_pastes):
                         #print("[+] URL Opened >> ", all_pastes[paste])
                         write_paste_log(all_pastes[paste])
                         webbrowser.open(all_pastes[paste])
-                        
+
 def submit_pastes(pastes):
         """This will ask user to submit specific pastes they find worth submission"""
         x = 0
@@ -65,15 +65,21 @@ def submit_pastes(pastes):
         print("q for exit")
         selections = input('>> ')
         if selections.lower() == "q":
-                sys.exit()
+                sys.exit()        
         selections = selections.split(',')
-        for num in selections:
-                url_split = urls[int(num)].split('/')
-                url_num = url_split.pop()
-                title = titles[int(num)]
-                print("[+]",url_num, title, " -- saved to database")
-                requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
-
+        try:    
+                for num in selections:
+                        url_split = urls[int(num)].split('/')
+                        url_num = url_split.pop()
+                        title = titles[int(num)]
+                        print("[+]",url_num, title, " -- saved to database")
+                        requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
+        except:
+                if IndexError:
+                        subprocess.call('clear')
+                        print('Invalid entry, try again')
+                        submit_pastes(pastes)
+                
 pastes = retrieve_pastes()
 open_pastes(pastes)
 submit_pastes(pastes)
