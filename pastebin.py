@@ -23,12 +23,24 @@ def retrieve_pastes():
         print('[+] Opening...')
         return all_pastes
 
+def write_paste_log(url):
+        with open('checked_pastes.txt', 'a') as paste_file:
+                paste_file.writelines(url+"\n")
+
+def check_log(paste_url):
+        with open('checked_pastes.txt', 'r') as paste_file:
+                paste_file = paste_file.readlines()
+        if paste_url not in paste_file:
+                return True
+        else:
+                return False
 
 def open_pastes(all_pastes):
         #Open all links in browser
         for paste in all_pastes:
-                if not all_pastes[paste].startswith('https://pastebin.com/raw/archive'):
+                if not all_pastes[paste].startswith('https://pastebin.com/raw/archive') and check_log(all_pastes[paste]):
                         print("[+] URL Opened >> ", all_pastes[paste])
+                        write_paste_log(all_pastes[paste])
                         webbrowser.open(all_pastes[paste])
 
 pastes = retrieve_pastes()
