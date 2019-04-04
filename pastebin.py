@@ -69,9 +69,8 @@ def submit_pastes(pastes):
         for num in selections:
                 url_split = urls[int(num)].split('/')
                 url_num = url_split.pop()
-                print(url_num)
                 title = titles[int(num)]
-                print(title)
+                print("[+]",url_num, title, " -- saved to database")
                 requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
 
 pastes = retrieve_pastes()
