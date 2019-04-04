@@ -21,7 +21,8 @@ def retrieve_pastes():
         #add each link to all_pastes as post_title:url
         for paste in pastes:
                 if 'archive' not in paste['href']:
-                        all_pastes[paste.text] = "https://pastebin.com"+paste['href']
+                        if check_log("https://pastebin.com"+paste['href'])== True:
+                                all_pastes[paste.text] = "https://pastebin.com"+paste['href']
 
         print('[+] Complete')
         print('[+] Opening...')
@@ -36,7 +37,7 @@ def check_log(paste_url):
         """Check the log of viewed urls"""
         with open('checked_pastes.txt', 'r') as paste_file:
                 paste_file = paste_file.readlines()
-        if paste_url not in paste_file:
+        if paste_url+'\n' not in paste_file:
                 return True
         else:
                 return False
@@ -45,11 +46,9 @@ def open_pastes(all_pastes):
         """Open all the pastes in browser tabs """
         #Open all links in browser
         for paste in all_pastes:
-                if check_log(all_pastes[paste]) == True:
-                        pass
-                        #print("[+] URL Opened >> ", all_pastes[paste])
-                        write_paste_log(all_pastes[paste])
-                        webbrowser.open(all_pastes[paste])
+                #print("[+] URL Opened >> ", all_pastes[paste])
+                write_paste_log(all_pastes[paste])
+                webbrowser.open(all_pastes[paste])
 
 def submit_pastes(pastes):
         """This will ask user to submit specific pastes they find worth submission"""
