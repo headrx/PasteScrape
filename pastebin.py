@@ -77,7 +77,7 @@ def submit_pastes(pastes):
         except:
                 if IndexError:
                         subprocess.call('clear')
-                        print('Invalid entry, try again')
+                        print('[!] Invalid entry, try again')
                         submit_pastes(pastes)
                 
 pastes = retrieve_pastes()
