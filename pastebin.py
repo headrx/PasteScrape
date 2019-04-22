@@ -72,6 +72,7 @@ def submit_pastes(pastes):
                         url_num = url_split.pop()
                         title = titles[int(num)]
                         print("[+]",url_num, title, " -- saved to database")
+                        #requests.get('http://127.0.0.1:5000/submit/pastebin/{}/{}'.format(url_num,title))
                         requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
         except:
                 if IndexError:
