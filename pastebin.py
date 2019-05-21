@@ -4,6 +4,14 @@ import requests
 import sys
 import subprocess
 
+# To-do
+"""
+
+[+] Add optional title instead of default"""
+
+
+
+
 def retrieve_pastes():
         """Scrape the newest public pastes """
         #WIll store all pastes from the /archive(recent)
@@ -61,6 +69,7 @@ def submit_pastes(pastes):
                 titles.append(paste)
                 x +=1
         print('Enter numbers to submit seperated by commas, no spaces. For ex: 3,4,5,6')
+        print("If custom title is wanted, enter as number#Title (3#New Paste Title")
         print("q for exit")
         selections = input('>> ')
         if selections.lower() == "q":
@@ -68,9 +77,17 @@ def submit_pastes(pastes):
         selections = selections.split(',')
         try:    
                 for num in selections:
-                        url_split = urls[int(num)].split('/')
-                        url_num = url_split.pop()
-                        title = titles[int(num)]
+                        """#If custom title is needed (paste_number#CustomTitle)"""
+                        if "#" in num:
+                                title_list = num.split('#')
+                                title = title_list[1]
+                                url_split = urls[int(title_list[0])].split('/')
+                                url_num = url_split.pop()
+                        """If normal entry"""
+                        else:
+                                title = titles[int(num)]
+                                url_split = urls[int(num)].split('/')
+                                url_num = url_split.pop()
                         print("[+]",url_num, title, " -- saved to database")
                         #requests.get('http://127.0.0.1:5000/submit/pastebin/{}/{}'.format(url_num,title))
                         requests.get('http://hotrack.pythonanywhere.com/submit/pastebin/{}/{}'.format(url_num,title))
