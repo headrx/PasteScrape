@@ -7,10 +7,7 @@ import subprocess
 # To-do
 """
 
-[+] Add optional title instead of default"""
-
-
-
+"""
 
 def retrieve_pastes():
         """Scrape the newest public pastes """
@@ -78,12 +75,14 @@ def submit_pastes(pastes):
         try:    
                 for num in selections:
                         """#If custom title is needed (paste_number#CustomTitle)"""
+
                         if "#" in num:
                                 title_list = num.split('#')
                                 title = title_list[1]
                                 url_split = urls[int(title_list[0])].split('/')
                                 url_num = url_split.pop()
-                        """If normal entry"""
+
+                        
                         else:
                                 title = titles[int(num)]
                                 url_split = urls[int(num)].split('/')
